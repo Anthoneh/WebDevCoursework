@@ -11,6 +11,7 @@ namespace WebDevCoursework.Models
         [Key]
         public int Id { get; set; }
         //add limits to Forum names
+        [MaxLength(240)]
         public string Name { get; set; }
     }
 }

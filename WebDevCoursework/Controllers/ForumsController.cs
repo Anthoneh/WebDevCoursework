@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebDevCoursework.Data;
 using WebDevCoursework.Models;
+using WebDevCoursework.Repository;
 
 namespace WebDevCoursework.Controllers
 {
@@ -15,17 +16,19 @@ namespace WebDevCoursework.Controllers
     public class ForumsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        //add the user here and in the constructor
+        private ForumRepository _forumRep;
 
         public ForumsController(ApplicationDbContext context)
         {
             _context = context;
+            _forumRep = new ForumRepository(_context);
         }
 
         // GET: Forums
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Forum.ToListAsync());
+            List<Forum> forums = _forumRep.ListOfForums();
+            return View(forums);
         }
 
         // GET: Forums/Details/5
@@ -36,8 +39,7 @@ namespace WebDevCoursework.Controllers
                 return NotFound();
             }
 
-            Forum forum = await _context.Forum
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Forum forum = await _forumRep.GetForumIdAsync(id);
             if (forum == null)
             {
                 return NotFound();
@@ -94,7 +96,8 @@ namespace WebDevCoursework.Controllers
         // GET: Forums/Create
         public IActionResult Create()
         {
-            return View();
+            Forum forum = new Forum();
+            return View(forum);
         }
 
         // POST: Forums/Create
@@ -102,12 +105,11 @@ namespace WebDevCoursework.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Forum forum)
+        public IActionResult Create([Bind("Id,Name")] Forum forum)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(forum);
-                await _context.SaveChangesAsync();
+                _forumRep.Create(forum);
                 return RedirectToAction(nameof(Index));
             }
             return View(forum);
@@ -172,8 +174,7 @@ namespace WebDevCoursework.Controllers
                 return NotFound();
             }
 
-            Forum forum = await _context.Forum
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Forum forum = await _forumRep.GetForumIdAsync(id);
             if (forum == null)
             {
                 return NotFound();
@@ -187,9 +188,8 @@ namespace WebDevCoursework.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Forum forum = await _context.Forum.FindAsync(id);
-            _context.Forum.Remove(forum);
-            await _context.SaveChangesAsync();
+            Forum forum = await _forumRep.GetForumIdAsync(id);
+            _forumRep.Delete(forum);
             return RedirectToAction(nameof(Index));
         }
 

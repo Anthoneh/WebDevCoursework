@@ -6,13 +6,13 @@ using WebDevCoursework.Models;
 
 namespace WebDevCoursework.Repository
 {
-    public class IForumRepository
+    public interface IForumRepository
     {
         void Create(Forum forum);
 
         void Edit(Forum forum);
 
-        Forum GetForumId(int id);
+        Task<Forum> GetForumIdAsync(int? id);
 
         void Delete(Forum forum);
 
