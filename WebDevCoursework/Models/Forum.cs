@@ -11,10 +11,10 @@ namespace WebDevCoursework.Models
         [Key]
         public int Id { get; set; }
 
-        [MaxLength(240)]
+        [MaxLength(240),MinLength(1)]
         public string Name { get; set; }
 
-        [MaxLength(56)]
+        [MaxLength(56),MinLength(1)]
         public string Description { get; set; }
 
     }

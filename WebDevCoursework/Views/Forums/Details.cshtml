@@ -4,26 +4,13 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Forum</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Forum.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Forum.Name)
-        </dd>
-    </dl>
-</div>
+<h2>@Html.DisplayFor(model => model.Forum.Name)</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                Post
+                Posts
             </th>
             <th></th>
         </tr>
@@ -35,9 +22,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
-                <tr>
+                <td>
                     @Html.DisplayFor(modelItem => item.TimePosted)
-                </tr>
+                </td>
             </tr>
         }
     </tbody>
@@ -63,6 +50,5 @@
 </div>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Forum.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-danger" asp-action="Index">Back</a>
 </div>

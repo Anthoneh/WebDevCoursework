@@ -10,11 +10,10 @@
 <h2>List of Forums</h2>
 
 <p>
-    @if ( RoleManager.Equals("Admin") )
-    {
     <a class="btn btn-info" asp-action="Create">Create New</a>
-    }
 </p>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -26,11 +25,20 @@
     <tbody>
         @foreach (Forum item in Model.Forums)
         {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-            </tr>
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Description</td>
+            <td>
+                <a class="btn btn-default" asp-action="details" asp-route-Id="@item.Id">View</a>
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-action="edit" asp-route-Id="@item.Id">Edit</a>
+            </td>
+            <td>
+                <a class="btn btn-danger" asp-action="delete" asp-route-Id="@item.Id">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

@@ -27,10 +27,25 @@ namespace WebDevCoursework.Controllers
 
         public IActionResult Index()
         {
-            List<Forum> forums = _forumRep.ListOfForums();
-            return View(forums);
+            ForumIndexVM viewModel = new ForumIndexVM();
+
+            viewModel.Forums = _forumRep.ListOfForums();
+
+            return View(viewModel);
         }
 
+        public async Task<IActionResult> Search(string searchString)
+        {
+            var forums = from m in _context.Forum
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                forums = forums.Where(s => s.Name.Contains(searchString));
+            }
+
+            return View(await forums.ToListAsync());
+        }
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -184,6 +199,13 @@ namespace WebDevCoursework.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             Forum forum = await _forumRep.GetForumIdAsync(id);
+            foreach (Post post in _context.Post)
+            {
+                if (post.ForumId == forum)
+                {
+                    _context.Post.Remove(post);
+                }
+            }
             _forumRep.Delete(forum);
             return RedirectToAction(nameof(Index));
         }
