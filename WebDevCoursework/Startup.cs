@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using WebDevCoursework.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebDevCoursework.Models;
 
 namespace WebDevCoursework
 {
@@ -37,14 +38,17 @@ namespace WebDevCoursework
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+            .AddDefaultUI();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -62,6 +66,8 @@ namespace WebDevCoursework
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            DBInitializer.Seed(context, userManager, roleManager);
 
             app.UseMvc(routes =>
             {
