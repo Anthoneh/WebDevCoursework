@@ -34,19 +34,6 @@ namespace WebDevCoursework.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> Search(string searchString)
-        {
-            var forums = from m in _context.Forum
-                         select m;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                forums = forums.Where(s => s.Name.Contains(searchString));
-            }
-
-            return View(await forums.ToListAsync());
-        }
-
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -208,6 +195,19 @@ namespace WebDevCoursework.Controllers
             }
             _forumRep.Delete(forum);
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Search(string searchString)
+        {
+            var forums = from m in _context.Forum
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                forums = forums.Where(s => s.Name.Contains(searchString));
+            }
+
+            return View(await forums.ToListAsync());
         }
 
         private bool ForumExists(int id)
