@@ -1,35 +1,36 @@
-﻿@model IEnumerable<WebDevCoursework.Models.Forum>
+﻿@model WebDevCoursework.Models.ForumIndexVM
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+@inject RoleManager<IdentityRole> RoleManager
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>List of Forums</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if ( RoleManager.Equals("Admin") )
+    {
+    <a class="btn btn-info" asp-action="Create">Create New</a>
+    }
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
+            <td>Forum No.</td>
+            <td>Forum Title</td>
+            <td>Description</td>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (Forum item in Model.Forums)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+            </tr>
+        }
     </tbody>
 </table>

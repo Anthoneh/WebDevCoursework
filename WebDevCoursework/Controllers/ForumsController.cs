@@ -24,14 +24,14 @@ namespace WebDevCoursework.Controllers
             _forumRep = new ForumRepository(_context);
         }
 
-        // GET: Forums
+
         public IActionResult Index()
         {
             List<Forum> forums = _forumRep.ListOfForums();
             return View(forums);
         }
 
-        // GET: Forums/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -54,7 +54,6 @@ namespace WebDevCoursework.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details([Bind("ForumId,Comment,TimePosted")] ForumDetailsVM viewModel)
         {
-            //Protection from overposting
             if (ModelState.IsValid)
             {
                 Post post = new Post();
@@ -93,16 +92,14 @@ namespace WebDevCoursework.Controllers
             return viewModel;
         }
 
-        // GET: Forums/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             Forum forum = new Forum();
             return View(forum);
         }
 
-        // POST: Forums/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,Name")] Forum forum)
@@ -115,7 +112,7 @@ namespace WebDevCoursework.Controllers
             return View(forum);
         }
 
-        // GET: Forums/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -131,9 +128,7 @@ namespace WebDevCoursework.Controllers
             return View(forum);
         }
 
-        // POST: Forums/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Forum forum)
@@ -166,7 +161,7 @@ namespace WebDevCoursework.Controllers
             return View(forum);
         }
 
-        // GET: Forums/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -183,7 +178,7 @@ namespace WebDevCoursework.Controllers
             return View(forum);
         }
 
-        // POST: Forums/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
