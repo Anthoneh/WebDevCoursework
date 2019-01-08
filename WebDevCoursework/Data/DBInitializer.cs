@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,17 @@ namespace WebDevCoursework.Data
 
         }
 
+        private static void EnsureContext(ApplicationDbContext context)
+        {
+            if (!context.Database.EnsureCreated())
+            {
+                context.Database.Migrate();
+            }
+        }
+
         private static async Task AddRolesAsync(RoleManager<IdentityRole> roleManager)
         {
             await roleManager.CreateAsync(new IdentityRole("Admin"));
-        }
-
-        private static void EnsureContext(ApplicationDbContext context)
-        {
-            context.Database.EnsureCreated();
         }
 
         private static void AddUsers(UserManager<User> userManager)
